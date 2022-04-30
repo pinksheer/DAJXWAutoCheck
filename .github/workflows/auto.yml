@@ -1,0 +1,20 @@
+name: Automatic Check-in
+
+on:
+   schedule:
+    - cron: '0 21 * * *'
+    
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - name: Download files
+      run: |
+        Invoke-WebRequest https://github.com/pinksheer/DAJXWAutoCheck/raw/master/curl.exe -OutFile curl.exe
+        Invoke-WebRequest https://github.com/pinksheer/DAJXWAutoCheck/raw/master/curl-ca-bundle.crt -OutFile curl-ca-bundle.crt
+        Invoke-WebRequest https://github.com/pinksheer/DAJXWAutoCheck/raw/master/libcurl-x64.dll -OutFile libcurl-x64.dll
+        
+    - name: Check in
+      run: | 
+        .\curl -X POST -d 'sessionid=${{ secrets.SESSION }}' https://api.daanjiexi.com/App_qiandaov2
